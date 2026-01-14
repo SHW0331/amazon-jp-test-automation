@@ -31,8 +31,8 @@ I am learning how to use **WebDriverWait** to handle dynamic web pages and make 
 
 ## 🛠 Tech Stack (技術スタック)
 
-- **Language:** Python 3.x
-- **Automation:** Selenium WebDriver
+- **Language:** Python 3.14
+- **Automation:** Selenium WebDriver (Chrome)
 - **Framework:** Pytest (Learning in progress)
 - **Excel Library:** openpyxl
 - **IDE:** PyCharm
