@@ -31,6 +31,7 @@ ghostdriver.log
 
 # Excel 임시 파일 (파일 열려 있을 때 생성됨)
 ~$*.xlsx
+*.xlsx
 
 # Mac 환경일 경우 (혹시 모르니)
 .DS_Store
