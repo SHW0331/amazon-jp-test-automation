@@ -26,7 +26,14 @@
   - 딕셔너리 형태(`{'title': '...', 'price': '...'}`)의 데이터를 처리하도록 수정.
   - 엑셀 헤더에 **'Price'** 열 추가.
 
+- **테스트 코드 로직 확장 (`tests/test_search.py`)**
+  - 기존: "nintendo switch"라는 고정된 단어 하나만 검색.
+  - 변경: `["PS5", "AirPods", "Keyboard"]` 처럼 리스트에 있는 모든 검색어를 순서대로 실행.
 
+
+- **문제점 : 스폰서 상품 예외처리 필요**
+  - スポンサー情報を表示、または広告フィードバックを残す
+  - span[class="puis-label-popover-default"]
 
 ## 프로젝트 구조 (Folder Structure)
 ```text

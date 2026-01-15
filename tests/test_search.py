@@ -1,4 +1,7 @@
 import pytest
+import os
+import time
+import random
 import openpyxl
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -61,12 +64,13 @@ def test_amazon_search_results_list():
         print("\n[PASS] Product list extraction successful!")
 
     finally:
-        driver.close()
+        driver.quit()
 
 def test_amazon_search_and_save_excel():
     """검색 후, 결과를 엑셀  파일로 저장하는 테스트"""
     driver = webdriver.Chrome()
     driver.maximize_window()
+    output_dir = "outputs"
 
     try:
         amazon_main = AmazonMainPage(driver)
@@ -91,7 +95,8 @@ def test_amazon_search_and_save_excel():
 
         # 4. 파일로 저장
         file_name = "amazon_result_with_price.xlsx"
-        wb.save(file_name)
+        save_path = os.path.join(output_dir, file_name)
+        wb.save(save_path)
 
         # 5. 검증 : 리스트가 비어있지 않은지
         print(f"\n[PASS] Successfully saved {len(products)} items to '{file_name}'.")
@@ -99,3 +104,63 @@ def test_amazon_search_and_save_excel():
 
     finally:
         driver.quit()
+
+def test_search_multiple_keywords():
+    """여러 개의 키워드를 연속으로 검색하고 하나의 엑셀에 저장"""
+
+    driver = webdriver.Chrome()
+    driver.maximize_window()
+    output_dir = "outputs"
+
+    # 검색 키워드 설정
+    search_keywords = [
+        "マリオカート8 デラックス",
+        "あつまれ どうぶつの森",
+        "大乱闘スマッシュブラザーズ SPECIAL",
+        "ゼルダの伝説 ブレス オブ ザ ワイルド",
+        "スーパーマリオ オデッセイ",
+    ]
+
+    try:
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Multi Search Results"
+        ws.append(["No.", "Keyword", "Product Title", "Price"])
+
+        total_count = 0
+
+        for keyword in search_keywords:
+            print(f"\n[INFO] Preparing to search for '{keyword}'... (Waiting for safety)")
+
+            # Anti-Bot Wait (Random)
+            time.sleep(random.uniform(2, 5))
+
+            amazon_main = AmazonMainPage(driver)
+            amazon_main.open()
+
+            amazon_main.search_product(keyword)
+            time.sleep(random.uniform(2, 5))
+
+            result_page = SearchResultsPage(driver)
+            products = result_page.get_product_info_list()
+
+            for item in products:
+                total_count += 1
+                ws.append([total_count, keyword, item['title'], item['price']])
+
+            print(f"-> Found {len(products)} items for '{keyword}'.")
+
+        file_name = "amazon_multi_results.xlsx"
+        save_path = os.path.join(output_dir, file_name)
+        wb.save(save_path)
+
+        print(f"\n[PASS] Successfully saved {total_count} items to '{file_name}'.")
+
+        # 검증 : total count가 0인지
+        assert total_count > 0, "No Products found for any keyword!"
+
+    finally:
+        driver.quit()
+
+
+

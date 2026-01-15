@@ -14,6 +14,8 @@ class SearchResultsPage:
         self.title_locator = (By.CSS_SELECTOR, "div[data-cy='title-recipe'] a h2 span")
         # 상품 가격(price) locator = span[class='a-color-price']
         self.price_locator = (By.CSS_SELECTOR, "span[class='a-color-price']")
+        # 광고 locator = span[class="puis-label-popover-default"]
+        self.sponsored_locator = (By.CSS_SELECTOR, "span.puis-label-popover-default")
 
     def get_product_info_list(self):
         """상품 카드를 하나씩 순회하며 제목과 가격을 추출"""
@@ -23,7 +25,10 @@ class SearchResultsPage:
 
         for card in cards:
             try:
-                # 2. 제목 추출
+                # 2. 제목 추출 (광고 라벨이 하나라도 있으면 continue
+                if len(card.find_elements(*self.sponsored_locator)) > 0:
+                    continue
+
                 title_element = card.find_element(*self.title_locator)
                 title = title_element.text.strip()
 
