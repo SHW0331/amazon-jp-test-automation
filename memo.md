@@ -19,6 +19,12 @@
 
 ## 2. 파일별 주요 역할 및 개발 내역 (File History) - 26.01.15
 
+- **`pages/search_results_page.py`**
+  - 상품 카드(Card) 하나를 잡고, 그 안에서 제목과 가격을 추출하는 구조로 변경.
+
+- **`tests/test_search.py`**
+  - 딕셔너리 형태(`{'title': '...', 'price': '...'}`)의 데이터를 처리하도록 수정.
+  - 엑셀 헤더에 **'Price'** 열 추가.
 
 
 

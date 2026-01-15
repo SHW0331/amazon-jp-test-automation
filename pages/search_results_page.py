@@ -7,14 +7,42 @@ class SearchResultsPage:
 
     def __init__(self, driver):
         self.driver = driver
-        # 검색 결과 상품들의 공통 제목 부분
-        # h2.a-size-base-plus.a-spacing-none.a-color-base.a-text-normal span
-        self.product_titles = (By.CSS_SELECTOR, "h2.a-size-base-plus.a-spacing-none.a-color-base.a-text-normal span")
 
-    def get_all_product_titles(self):
-        """검색 결과 페이지의 모든 상품 제목을 리스트로 반환"""
-        elements = self.driver.find_elements(*self.product_titles)
-        # 각 요소에서 text만 추출
-        titles = [el.text for el in elements if el.text.strip() != ""]
-        return titles
+        # 상품 카드(Box) loactor = div[data-cy="asin-faceout-container"]
+        self.product_cards = (By.CSS_SELECTOR, "div[data-cy='asin-faceout-container']")
+        # 상품 제목(title) locator = div[data-cy='title-recipe'] a h2 span
+        self.title_locator = (By.CSS_SELECTOR, "div[data-cy='title-recipe'] a h2 span")
+        # 상품 가격(price) locator = span[class='a-color-price']
+        self.price_locator = (By.CSS_SELECTOR, "span[class='a-color-price']")
 
+    def get_product_info_list(self):
+        """상품 카드를 하나씩 순회하며 제목과 가격을 추출"""
+        # 1. 화면에 있는 모든 상품 카드 추출
+        cards = self.driver.find_elements(*self.product_cards)
+        product_list = []
+
+        for card in cards:
+            try:
+                # 2. 제목 추출
+                title_element = card.find_element(*self.title_locator)
+                title = title_element.text.strip()
+
+                # 3. 가격 추출
+                try:
+                    price_element = card.find_element(*self.price_locator)
+                    price = price_element.text.strip()
+                except:
+                    price = "N/A"
+
+                # 4. 리스트 추가
+                if title:
+                    product_list.append({
+                        'title': title,
+                        'price': price
+                    })
+
+            except Exception:
+                # 카드 하나를 읽다가 문제가 생기면 무시하고 다음 카드로
+                continue
+
+        return product_list

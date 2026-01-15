@@ -77,27 +77,25 @@ def test_amazon_search_and_save_excel():
 
         # 1. 결과 리스트 가져오기
         results_page = SearchResultsPage(driver)
-        titles = results_page.get_all_product_titles()
+        products = results_page.get_product_info_list()
 
         # 2. 엑셀 Workbook()
         wb = openpyxl.Workbook()
         ws = wb.active
-        ws.title = "Amazon Results" # 타이틀
-        ws.append(["No.", "Product Title", "Keyword"]) # 헤더 작성
+        ws.title = "Amazon Results"
+        ws.append(["No.", "Product Title", "Price", "Keyword"]) # 헤더 작성
 
         # 3. 리스트에 있는 내용을 하나씩 꺼내서 엑셀에 작성
-        for i, title in enumerate(titles, 1):
-            ws.append([i, title, search_keyword])
+        for i, item in enumerate(products, 1):
+            ws.append([i, item['title'], item['price'], search_keyword])
 
         # 4. 파일로 저장
-        file_name = "amazon_results.xlsx"
+        file_name = "amazon_result_with_price.xlsx"
         wb.save(file_name)
 
         # 5. 검증 : 리스트가 비어있지 않은지
-        print(f"\n[PASS] Successfully saved {len(titles)} items to '{file_name}'.")
-        assert len(titles) > 0, "Product list is empty!"
+        print(f"\n[PASS] Successfully saved {len(products)} items to '{file_name}'.")
+        assert len(products) > 0, "Product list is empty!"
 
     finally:
         driver.quit()
-
-
