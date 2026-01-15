@@ -70,7 +70,7 @@ def test_amazon_search_and_save_excel():
     """검색 후, 결과를 엑셀  파일로 저장하는 테스트"""
     driver = webdriver.Chrome()
     driver.maximize_window()
-    output_dir = "outputs"
+    report_dir = "reports"
 
     try:
         amazon_main = AmazonMainPage(driver)
@@ -95,7 +95,7 @@ def test_amazon_search_and_save_excel():
 
         # 4. 파일로 저장
         file_name = "amazon_result_with_price.xlsx"
-        save_path = os.path.join(output_dir, file_name)
+        save_path = os.path.join(report_dir, file_name)
         wb.save(save_path)
 
         # 5. 검증 : 리스트가 비어있지 않은지
@@ -110,7 +110,7 @@ def test_search_multiple_keywords():
 
     driver = webdriver.Chrome()
     driver.maximize_window()
-    output_dir = "outputs"
+    report_dir = "reports"
 
     # 검색 키워드 설정
     search_keywords = [
@@ -151,7 +151,7 @@ def test_search_multiple_keywords():
             print(f"-> Found {len(products)} items for '{keyword}'.")
 
         file_name = "amazon_multi_results.xlsx"
-        save_path = os.path.join(output_dir, file_name)
+        save_path = os.path.join(report_dir, file_name)
         wb.save(save_path)
 
         print(f"\n[PASS] Successfully saved {total_count} items to '{file_name}'.")

@@ -35,6 +35,3 @@ ghostdriver.log
 
 # Mac 환경일 경우 (혹시 모르니)
 .DS_Store
-
-# 폴더 제외
-outputs/
