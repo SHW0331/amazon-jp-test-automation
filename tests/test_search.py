@@ -162,5 +162,113 @@ def test_search_multiple_keywords():
     finally:
         driver.quit()
 
+def test_search_pagination():
+    """
+    [시나리오]
+    1. 여러 키워드 검색
+    2. 각 키워드당 최대 3페이지까지 수집
+    3. reports 폴더에 excel 저장
+    """
+
+    driver = webdriver.Chrome()
+    driver.maximize_window()
+
+    search_keywords = [
+        "マリオカート8 デラックス",
+        "あつまれ どうぶつの森",
+        "大乱闘スマッシュブラザーズ SPECIAL",
+        "ゼルダの伝説 ブレス オブ ザ ワイルド",
+        "スーパーマリオ オデッセイ",
+    ]
+
+    # 최대 페이지 제한
+    MAX_PAGES = 3
+
+    try:
+        report_dir = "reports"
+
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Amazon Pagination Results"
+        ws.append(["No.", "Keyword", "Page", "Product Title", "Price"])
+
+        total_count = 0
+
+        for keyword in search_keywords:
+            print(f"\n[INFO] Preparing to search for '{keyword}'... (Waiting for safety)")
+
+            amazon_main = AmazonMainPage(driver)
+            amazon_main.open()
+            amazon_main.search_product(keyword)
+            time.sleep(random.uniform(2, 5))
+            result_page = SearchResultsPage(driver)
+
+            # 페이지 반복 (1페이지부터 MAX_PAGES까지)
+            for page_num in range(1, MAX_PAGES + 1):
+                print(f"    >>> Collecting Page {page_num}...")
+
+                # 데이터 수집
+                products = result_page.get_product_info_list()
+
+                # 엑셀 저장
+                for item in products:
+                    total_count += 1
+                    ws.append([total_count, keyword, page_num, item['title'], item['price']])
+
+                print(f"    -> Saved {len(products)} items from page '{page_num}'.")
+
+                # MAX_PAGES가 아니라면 next page button click
+                if page_num < MAX_PAGES:
+                    # 다음 페이지 True, 마지막 페이지 False 반환
+                    is_next_clicked = result_page.click_next_page()
+
+                    if is_next_clicked:
+                        wait_time = random.randint(2, 5)
+                        print(f"    -> Moving to next page... (Wait {wait_time: .1f}s)")
+                        time.sleep(wait_time)
+                    else:
+                        print("     -> 'Next' button not found or disabled. Stopping pagination.")
+                        break
+
+            print(f"[DONE] Finished '{keyword}'. Cooling down...")
+            time.sleep(random.uniform(2, 5))
+
+        file_name = "amazon_pagination_results.xlsx"
+        save_path = os.path.join(report_dir, file_name)
+        wb.save(save_path)
+
+        print(f"\n[PASS] Total {total_count} items collected across pages.")
+        print(f"    File saved at: {save_path}")
+
+        # 검증 : total_count가 0인지 아닌지
+        assert total_count > 0
+
+    finally:
+        driver.quit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

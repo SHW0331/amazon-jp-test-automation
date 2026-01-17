@@ -35,6 +35,13 @@
   - スポンサー情報を表示、または広告フィードバックを残す
   - span[class="puis-label-popover-default"]
 
+## 3. 파일별 주요 역할 및 개발 내역 (File History) - 26.01.17
+- **페이지 객체 기능 추가 (`pages/search_results_page.py`)**
+  - 버튼을 클릭하고 다음 페이지가 로딩될 때까지 기다리는 기능 구현.
+
+- **테스트 로직 업그레이드 (`tests/test_search.py`)**
+  - 각 키워드당 최대 3페이지까지 수집하도록 제한 설정.
+
 ## 프로젝트 구조 (Folder Structure)
 ```text
 amazon-jp-test-automation/

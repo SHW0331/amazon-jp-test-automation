@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -8,6 +10,7 @@ class SearchResultsPage:
     def __init__(self, driver):
         self.driver = driver
 
+        # [1] 상품 카드 & 내부 요소
         # 상품 카드(Box) loactor = div[data-cy="asin-faceout-container"]
         self.product_cards = (By.CSS_SELECTOR, "div[data-cy='asin-faceout-container']")
         # 상품 제목(title) locator = div[data-cy='title-recipe'] a h2 span
@@ -16,6 +19,10 @@ class SearchResultsPage:
         self.price_locator = (By.CSS_SELECTOR, "span[class='a-color-price']")
         # 광고 locator = span[class="puis-label-popover-default"]
         self.sponsored_locator = (By.CSS_SELECTOR, "span.puis-label-popover-default")
+
+        # [2] page locator
+        # 다음 버튼(next button) locator = a.s-pagination-next
+        self.next_btn = (By.CSS_SELECTOR, "a.s-pagination-next")
 
     def get_product_info_list(self):
         """상품 카드를 하나씩 순회하며 제목과 가격을 추출"""
@@ -51,3 +58,19 @@ class SearchResultsPage:
                 continue
 
         return product_list
+
+    def click_next_page(self):
+        """다음 페이지 클릭, 성공 True, 버튼이 없으면 False 반환"""
+        try:
+            button = self.driver.find_element(*self.next_btn)
+
+            # 버튼 활성화 확인 <a>, <span>이면 마지막 페이지
+            if button.tag_name == "a":
+                button.click()
+                time.sleep(2)
+                return True
+            else:
+                return False
+
+        except Exception:
+            return False
