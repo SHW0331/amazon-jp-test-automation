@@ -13,7 +13,7 @@ class ExcelReporter:
         if not os.path.exists(self.report_dir):
             os.makedirs(self.report_dir)
         # file 없으면 생성
-        if not os.path.exists(self.file_path):
+        if not os.path.exists(self.filepath):
             self._create_new_report()
 
     def _create_new_report(self):
