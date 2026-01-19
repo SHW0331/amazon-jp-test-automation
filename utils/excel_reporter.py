@@ -20,23 +20,26 @@ class ExcelReporter:
         """새로운 보고서 파일 생성 및 헤더 작성"""
         wb = openpyxl.Workbook()
         ws = wb.active
-        ws.title = "Test Report"
-        headers = [
+        ws.title = "Test Execution Results"
 
-        ]
-
+        # 📝 우리가 결정한 QA 시트 헤더 정의
         headers = [
-            "TC ID",
-            "Module",
-            "Scenario",
-            "Test Data",
-            "Expected",
-            "Actual",
-            "Status",
-            "Time"
+            "TC ID",  # 테스트 케이스 ID
+            "Module",  # 모듈명 (Search, Navigation 등)
+            "Scenario",  # 시나리오 (무엇을 테스트했나)
+            "Test Data",  # 입력값 (PS5, Xbox 등)
+            "Expected Result",  # 기대 결과
+            "Actual Result",  # 실제 결과 (로그)
+            "Status",  # 판정 (PASS/FAIL)
+            "Timestamp"  # 실행 시간
         ]
         ws.append(headers)
+
+        # 헤더 스타일 Bold체
+        for cell in ws[1]:
+            cell.font = openpyxl.styles.Font(bold=True)
         wb.save(self.filepath)
+
 
     def log_result(self, tc_id, module, scenario, test_data, expected, actual, status):
         """테스트 결과를 엑셀에 추가"""
@@ -44,15 +47,19 @@ class ExcelReporter:
             wb = openpyxl.load_workbook(self.filepath)
             ws = wb.active
 
-            timestamp = datetime.now().strftime('%H:%M:%S')
-            row = [tc_id,
-                   module,
-                   scenario,
-                   test_data,
-                   expected,
-                   actual,
-                   status,
-                   timestamp]
+            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+            row = [
+                tc_id,
+                module,
+                scenario,
+                test_data,
+                expected,
+                actual,
+                status,
+                timestamp
+            ]
+
             ws.append(row)
             wb.save(self.filepath)
             print(f"    [Report] Saved: {tc_id} - {status}")
