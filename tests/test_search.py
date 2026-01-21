@@ -47,12 +47,12 @@ def test_amazon_search_results_list():
         amazon_main = AmazonMainPage(driver)
         amazon_main.open()
 
-        search_keyword = "nintndo switch"
+        search_keyword = "PS5"
         amazon_main.search_product(search_keyword)
 
         # 1. 결과 페이지에서 리스트 가져오기
         results_page = SearchResultsPage(driver)
-        all_titles = results_page.get_all_product_titles()
+        all_titles = results_page.get_product_info_list()
 
         # 2. 결과 확인
         print(f"\n[INFO] Total items found: {len(all_titles)}")
@@ -76,7 +76,7 @@ def test_amazon_search_and_save_excel():
         amazon_main = AmazonMainPage(driver)
         amazon_main.open()
 
-        search_keyword = "nintndo switch"
+        search_keyword = "PS5"
         amazon_main.search_product(search_keyword)
 
         # 1. 결과 리스트 가져오기

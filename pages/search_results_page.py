@@ -74,3 +74,8 @@ class SearchResultsPage:
 
         except Exception:
             return False
+
+    def click_frist_product(self):
+        """검색 결과의 첫 번째 상품을 클릭"""
+        first_item = self.driver.find_element(*self.title_locator)
+        first_item.click()
