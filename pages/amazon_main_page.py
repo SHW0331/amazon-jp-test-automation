@@ -1,4 +1,5 @@
-from selenium.common import NoSuchElementException
+import time
+from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -16,6 +17,13 @@ class AmazonMainPage:
 
         # 2. 메크로 확인
         self.continue_button = (By.XPATH, "//button[contains(text(),'ショッピングを続ける')]")
+
+        # 3. 배송지 변경
+        self.loc_icon = (By.ID, "nav-global-location-popover-link")
+        self.zip_input_front = (By.ID, "GLUXZipUpdateInput_0")
+        self.zip_input_back = (By.ID, "GLUXZipUpdateInput_1")
+        self.update_btn = (By.ID, "GLUXZipUpdate")
+        self.done_btn = (By.ID, "GLUXConfirmClose")
 
     def open(self):
         """Amazon Main Page 접속"""
@@ -51,3 +59,49 @@ class AmazonMainPage:
         search_input.clear()
         search_input.send_keys(text)
         self.driver.find_element(*self.search_button).click()
+
+
+    def set_dlivery_location(self, zip_code=["100", "0001"]):
+        """
+        배송지 우편번호를 변경하여 지역락(구매 불가) 해제
+        """
+        print(f"    >> 배송지 변경 시작 (Target: {zip_code}")
+        try:
+            # 1. 배송지 아이콘 클릭
+            WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located(self.loc_icon)
+            ).click()
+            time.sleep(2)
+
+            # 2. 우편번호 입력
+            input_front_box = WebDriverWait(self.driver, 5).until(
+                EC.visibility_of_element_located(self.zip_input_front)
+            )
+            input_front_box.clear()
+            input_front_box.send_keys(zip_code[0])
+
+            input_back_box = WebDriverWait(self.driver, 5).until(
+                EC.visibility_of_element_located(self.zip_input_back)
+            )
+            input_back_box.clear()
+            input_back_box.send_keys(zip_code[1])
+
+            # 3. 적용 버튼
+            self.driver.find_element(*self.update_btn).click()
+            time.sleep(1)
+
+            # 4. 확인 버튼
+            try:
+                WebDriverWait(self.driver, 5).until(
+                    EC.visibility_of_element_located(self.done_btn)
+                ).click()
+            except TimeoutException:
+                pass
+
+            # 새로 고침
+            time.sleep(2)
+            self.driver.refresh()
+            print(f"    >> 배송지 변경 완료 (Target: {zip_code[0]}-{zip_code[1]})")
+
+        except Exception as e:
+            print(f"    [Warning] 배송지 변경 중 오류: {e}")

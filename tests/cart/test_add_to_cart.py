@@ -16,7 +16,6 @@ reporter = ExcelReporter()
 def driver():
     driver = webdriver.Chrome()
     driver.maximize_window()
-    driver.implicitly_wait(10)
     yield driver
     driver.quit()
 
@@ -40,6 +39,7 @@ def test_add_to_cart(driver):
         print(f"\n[Start] {scenario}")
         main_page = AmazonMainPage(driver)
         main_page.open()
+        main_page.set_dlivery_location()
         main_page.search_product(keyword)
         print(" >> 검색어 입력 완료")
 
@@ -55,6 +55,11 @@ def test_add_to_cart(driver):
         # ------------------------------------------------------
         # 4. 상세 페이지 -> 장바구니 담기
         # ------------------------------------------------------
+        # 새탭에서 열림
+        time.sleep(2)
+        driver.switch_to.window(driver.window_handles[-1])
+        print(f" >> [Switch] 새 탭으로 드라이버 이동")
+
         detail_page = ProductDetailPage(driver)
 
         # (검증) 내가 들어온 페이지 제목 확인
@@ -87,5 +92,5 @@ def test_add_to_cart(driver):
     # ----------------------------------------------------------
     # 6. 리포트 저장
     # ----------------------------------------------------------
-    reporter.log_result(tc_id, module, scenario, keyword, expected, status)
+    reporter.log_result(tc_id, module, scenario, keyword, expected, actual, status)
     print(f" >> 결과 저장 완료: {status}")

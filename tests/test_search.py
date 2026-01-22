@@ -46,8 +46,9 @@ def test_amazon_search_results_list():
     try:
         amazon_main = AmazonMainPage(driver)
         amazon_main.open()
+        amazon_main.set_dlivery_location()
 
-        search_keyword = "PS5"
+        search_keyword = "nintendo switch 2"
         amazon_main.search_product(search_keyword)
 
         # 1. 결과 페이지에서 리스트 가져오기

@@ -19,7 +19,8 @@ class ProductDetailPage:
         # 장바구니 담기 버튼 span[id='submit.add-to-cart-announce']
         # self.add_to_cart_button = (By.ID, "add-to-cart-button")
         # submit.add-to-cart-announce
-        self.add_to_cart_button = (By.ID, "submit.add-to-cart-announce")
+        # self.add_to_cart_button = (By.ID, "submit.add-to-cart-announce")
+        self.add_to_cart_button = (By.ID, "add-to-cart-button")
 
         # 장바구니 담기 개수 id = nav-cart-count
         self.cart_count_badge = (By.ID, "nav-cart-count")
@@ -44,10 +45,6 @@ class ProductDetailPage:
                 EC.presence_of_element_located(self.add_to_cart_button)
             )
             btn.click()
-
-            # 2. 자바스크립트로 강제 클릭 실행 (hidden 속성)
-            self.driver.execute_script("arguments[0].click();", btn)
-            print(" >> [JS Click] 장바구니 버튼 강제 클릭 성공")
 
         except Exception as e:
             print(f"    [Error] 장바구니 담기 실패: {e}")
