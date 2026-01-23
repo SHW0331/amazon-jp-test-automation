@@ -91,11 +91,25 @@ class AmazonMainPage:
             time.sleep(1)
 
             # 4. 확인 버튼
+            print("     >> [Popup] 확인 (Done) 버튼 대기 중...")
             try:
-                WebDriverWait(self.driver, 5).until(
-                    EC.visibility_of_element_located(self.done_btn)
-                ).click()
+                done_buttons = WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_all_elements_located(self.done_btn)
+                )
+
+                clicked = False
+
+                for btn in done_buttons:
+                    if btn.is_displayed():
+                        print("     >> [Found] 실제 보이는 버튼 발견!")
+                        btn.click()
+                        clicked = True
+                        break
+                if not clicked:
+                    print("     >> [Warning] 버튼들은 보이지 않음")
+
             except TimeoutException:
+                print("     >> [Popup] 확인 버튼이 없거나 이미 닫힘 (Pass)")
                 pass
 
             # 새로 고침
