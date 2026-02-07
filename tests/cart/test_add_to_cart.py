@@ -114,7 +114,7 @@ def test_delete_cart(driver):
     tc_id = "TC_CART_02"
     module = "Cart"
     scenario = "장바구니 상품 삭제 및 초기화"
-    keyword = "Delete Action"
+    keyword = "掃除機"
     expected = "장바구니 삭제 메시지 출력"
 
     status = "FAIL"
@@ -168,10 +168,12 @@ def test_delete_cart(driver):
         cart_page = CartPage(driver)
         cart_page.go_to_cart()
 
+        time.sleep(3)
+
         # ----------------------------------------------------------
         # 3. 상품 확인
         # ----------------------------------------------------------
-        item_title = cart_page.get_first_title()
+        item_title = cart_page.get_first_item_title()
         if not item_title:
             raise Exception("장바구니에 상품이 없어 테스트 불가")
         print(f" >> 삭제할 상품 확인: {item_title[:20]}...")

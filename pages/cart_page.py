@@ -11,7 +11,8 @@ class CartPage:
         # 1. 상단 장바구니 아이콘 # nav-cart-icon nav-sprite
         self.nav_cart_icon = (By.ID, "nav-cart")
         # 2. 장바구니에 담긴 첫 번째 상품의 제목 # a-truncate-cut
-        self.cart_item_title = (By.CLASS_NAME, "a-truncate-full")
+        # span[class ='a-truncate-full a-offscreen']
+        self.cart_item_title = (By.CSS_SELECTOR, ".sc-grid-item-product-title .a-truncate-full")
         # 3. 삭제(掃除) 버튼 # 'decrement-icon
         self.delete_btn = (By.CSS_SELECTOR, "span[data-a-selector$='decrement-icon']")
         # 4. 삭제 확인 메세지 # sc-list-item-removed-msg
@@ -28,7 +29,7 @@ class CartPage:
             title_elem = WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located(self.cart_item_title)
             )
-            return title_elem.text.strip()
+            return title_elem.get_attribute("textContent").strip()
         except TimeoutException:
             print("   >> [Info] 장바구니에 상품이 없거나 제목을 못 찾았습니다.")
 
@@ -42,10 +43,11 @@ class CartPage:
                 delete_buttons[0].click()
                 print("   >> [Action] '삭제(削除)' 버튼 클릭")
 
-                WebDriverWait(self.driver, 10).until(
-                    EC.presence_of_element_located(*self.removed_msg)
+                removed_messages = WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located(self.removed_msg)
                 )
-                print("   >> [Success] '삭제되었습니다' 메시지 확인 완료")
+                if removed_messages:
+                    print("   >> [Success] '삭제되었습니다' 메시지 확인 완료")
             else:
                 print("   >> [Info] 이미 장바구니가 비어있습니다.")
         except Exception as e:
