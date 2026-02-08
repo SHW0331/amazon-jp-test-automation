@@ -79,7 +79,7 @@ class SearchResultsPage:
         except Exception:
             return False
 
-    def click_frist_product(self):
+    def click_first_product(self):
         """검색 결과의 첫 번째 상품을 클릭"""
         """스폰서 상품 건너뛰기"""
         print("     >> [Filter] 스폰서(광고) 상품 제외하고 탐색 시작...")

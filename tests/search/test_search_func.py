@@ -4,7 +4,7 @@ import random
 from selenium import webdriver
 from pages.amazon_main_page import AmazonMainPage
 from pages.search_results_page import SearchResultsPage
-from utils.excel_reporter import ExcelReporter
+from utils.excel_report import ExcelReporter
 
 reporter = ExcelReporter()
 

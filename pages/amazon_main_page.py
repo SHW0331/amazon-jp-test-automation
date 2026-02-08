@@ -61,7 +61,7 @@ class AmazonMainPage:
         self.driver.find_element(*self.search_button).click()
 
 
-    def set_dlivery_location(self, zip_code=["100", "0001"]):
+    def set_delivery_location(self, zip_code=["100", "0001"]):
         """
         배송지 우편번호를 변경하여 지역락(구매 불가) 해제
         """
